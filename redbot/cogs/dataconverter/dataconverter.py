@@ -12,9 +12,7 @@ _ = Translator("DataConverter", __file__)
 
 @cog_i18n(_)
 class DataConverter:
-    """
-    Cog for importing Red v2 Data
-    """
+    """Import Red V2 data to your V3 instance."""
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -22,13 +20,10 @@ class DataConverter:
     @checks.is_owner()
     @commands.command(name="convertdata")
     async def dataconversioncommand(self, ctx: commands.Context, v2path: str):
-        """
-        Interactive prompt for importing data from Red v2
+        """Interactive prompt for importing data from Red V2.
 
-        Takes the path where the v2 install is
-
-        Overwrites values which have entries in both v2 and v3,
-        use with caution.
+        Takes the path where the V2 install is, and overwrites
+        values which have entries in both V2 and v3; use with caution.
         """
         resolver = SpecResolver(Path(v2path.strip()))
 
@@ -53,7 +48,7 @@ class DataConverter:
             try:
                 message = await self.bot.wait_for("message", check=pred, timeout=60)
             except asyncio.TimeoutError:
-                return await ctx.send(_("Try this again when you are more ready"))
+                return await ctx.send(_("Try this again when you are ready."))
             else:
                 if message.content.strip().lower() in ["quit", "exit", "-1", "q", "cancel"]:
                     return await ctx.tick()
@@ -71,7 +66,7 @@ class DataConverter:
         else:
             return await ctx.send(
                 _(
-                    "There isn't anything else I know how to convert here."
-                    "\nThere might be more things I can convert in the future."
+                    "There isn't anything else I know how to convert here.\n"
+                    "There might be more things I can convert in the future."
                 )
             )

@@ -42,7 +42,7 @@ class CommandObj:
         intro = _(
             "Welcome to the interactive random {cc} maker!\n"
             "Every message you send will be added as one of the random "
-            "responses to choose from once this {} is "
+            "responses to choose from once this {cc} is "
             "triggered. To exit this interactive menu, type `{quit}`"
         ).format(cc="customcommand", quit="exit()")
         await ctx.send(intro)
@@ -101,7 +101,7 @@ class CommandObj:
             return m.channel == ctx.channel and m.author == ctx.message.author
 
         if not response:
-            await ctx.send(_("Do you want to create a 'randomized' cc? {}").format("y/n"))
+            await ctx.send(_("Do you want to create a 'randomized' cc? (y/n)"))
 
             msg = await self.bot.wait_for("message", check=check)
             if msg.content.lower() == "y":
@@ -144,40 +144,30 @@ class CustomCommands:
     @commands.group(aliases=["cc"])
     @commands.guild_only()
     async def customcom(self, ctx: commands.Context):
-        """Custom commands management"""
+        """Custom commands management."""
         pass
 
-    @customcom.group(name="add")
+    @customcom.group(name="create", aliases=["add"])
     @checks.mod_or_permissions(administrator=True)
-    async def cc_add(self, ctx: commands.Context):
-        """
+    async def cc_create(self, ctx: commands.Context):
+        """Commands to manage creating CCs.
+
         CCs can be enhanced with arguments:
-
-        Argument    What it will be substituted with
-
-        {message}   message
-
-        {author}    message.author
-
-        {channel}   message.channel
-
-        {guild}     message.guild
-
-        {server}    message.guild
+        - `{message}`: message
+        - `{author}`: message.author
+        - `{channel}`: message.channel
+        - `{guild}`: message.guild
+        - {server}`: message.guild
         """
         pass
 
-    @cc_add.command(name="random")
+    @cc_create.command(name="random")
     @checks.mod_or_permissions(administrator=True)
-    async def cc_add_random(self, ctx: commands.Context, command: str):
-        """
-        Create a CC where it will randomly choose a response!
+    async def cc_create_random(self, ctx: commands.Context, command: str):
+        """Create a CC where it will randomly choose a response!
 
-        Note: This is interactive
+        Note: This command is interactive.
         """
-        channel = ctx.channel
-        responses = []
-
         responses = await self.commandobj.get_responses(ctx=ctx)
         try:
             await self.commandobj.create(ctx=ctx, command=command, response=responses)
@@ -191,18 +181,18 @@ class CustomCommands:
 
         # await ctx.send(str(responses))
 
-    @cc_add.command(name="simple")
+    @cc_create.command(name="simple")
     @checks.mod_or_permissions(administrator=True)
-    async def cc_add_simple(self, ctx, command: str, *, text):
-        """Adds a simple custom command
+    async def cc_create_simple(self, ctx, command: str, *, text):
+        """Add a simple custom command.
 
         Example:
-        [p]customcom add simple yourcommand Text you want
+        - `[p]customcom create simple yourcommand Text you want`
         """
         guild = ctx.guild
         command = command.lower()
         if command in self.bot.all_commands:
-            await ctx.send(_("That command is already a standard command."))
+            await ctx.send(_("There already exists a bot command with the same name."))
             return
         try:
             await self.commandobj.create(ctx=ctx, command=command, response=text)
@@ -217,12 +207,11 @@ class CustomCommands:
     @customcom.command(name="edit")
     @checks.mod_or_permissions(administrator=True)
     async def cc_edit(self, ctx, command: str, *, text=None):
-        """Edits a custom command
+        """Edit a custom command.
 
         Example:
-        [p]customcom edit yourcommand Text you want
+        - `[p]customcom edit yourcommand Text you want`
         """
-        guild = ctx.message.guild
         command = command.lower()
 
         try:
@@ -231,16 +220,18 @@ class CustomCommands:
         except NotFound:
             await ctx.send(
                 _("That command doesn't exist. Use `{command}` to add it.").format(
-                    command="{}customcom add".format(ctx.prefix)
+                    command="{}customcom create".format(ctx.prefix)
                 )
             )
 
     @customcom.command(name="delete")
     @checks.mod_or_permissions(administrator=True)
     async def cc_delete(self, ctx, command: str):
-        """Deletes a custom command
+        """Delete a custom command.
+
         Example:
-        [p]customcom delete yourcommand"""
+        - `[p]customcom delete yourcommand`
+        """
         guild = ctx.message.guild
         command = command.lower()
         try:
@@ -251,7 +242,7 @@ class CustomCommands:
 
     @customcom.command(name="list")
     async def cc_list(self, ctx):
-        """Shows custom commands list"""
+        """List all available custom commands."""
 
         response = await CommandObj.get_commands(self.config.guild(ctx.guild))
 
@@ -260,7 +251,7 @@ class CustomCommands:
                 _(
                     "There are no custom commands in this server."
                     " Use `{command}` to start adding some."
-                ).format(command="{}customcom add".format(ctx.prefix))
+                ).format(command="{}customcom create".format(ctx.prefix))
             )
             return
 
