@@ -31,7 +31,7 @@ Feel free to take a [peek](https://cogs.red/)!
 
 # Installation
 
-The installation process is straightforward; all major platforms are supported: 
+The installation process is straightforward; all major platforms are supported:
 * [Windows](https://twentysix26.github.io/Red-Docs/red_install_windows/)
 * [Linux](https://twentysix26.github.io/Red-Docs/red_install_linux/)
 * [macOS](https://twentysix26.github.io/Red-Docs/red_install_mac/)
@@ -52,3 +52,5 @@ Red is in continuous development, and it’s supported by an active community wh
 Released under the [GNU GPL v3](LICENSE).
 
 *Red is named after the main character of "Transistor", a videogame by [Supergiant Games](https://www.supergiantgames.com/games/transistor/)*
+
+Test
