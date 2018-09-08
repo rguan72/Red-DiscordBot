@@ -25,7 +25,7 @@ from redbot.core.cli import confirm
 if sys.platform == "linux":
     import distro
 
-PYTHON_OK = sys.version_info >= (3, 6)
+PYTHON_OK = sys.version_info >= (3, 6, 2)
 INTERACTIVE_MODE = not len(sys.argv) > 1  # CLI flags = non-interactive
 
 INTRO = "==========================\nRed Discord Bot - Launcher\n==========================\n"
@@ -140,9 +140,10 @@ def update_red(dev=False, voice=False, mongo=False, docs=False, test=False):
 
 
 def run_red(selected_instance, autorestart: bool = False, cliflags=None):
+    interpreter = sys.executable
     while True:
         print("Starting {}...".format(selected_instance))
-        cmd_list = ["redbot", selected_instance]
+        cmd_list = [interpreter, "-m", "redbot", selected_instance]
         if cliflags:
             cmd_list += cliflags
         status = subprocess.call(cmd_list)
@@ -461,7 +462,7 @@ def main_menu():
 def main():
     if not PYTHON_OK:
         raise RuntimeError(
-            "Red requires Python 3.6 or greater. Please install the correct version!"
+            "Red requires Python 3.6.2 or greater. Please install the correct version!"
         )
     if args.debuginfo:  # Check first since the function triggers an exit
         debug_info()
