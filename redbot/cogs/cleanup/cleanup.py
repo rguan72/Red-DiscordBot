@@ -193,6 +193,7 @@ class Cleanup:
                 return True
             elif m == ctx.message:
                 return True
+            # else if m is in the alias list, return True
             else:
                 return False
 
@@ -311,7 +312,10 @@ class Cleanup:
                 cmd_name = m.content[len(p) :].split(" ")[0]
                 return bool(self.bot.get_command(cmd_name))
             return False
-
+        # jank solution: just import the _del_alias function from alias.py
+        # then call it here
+        # better idea: Go through the thing that actually deletes the alias and
+        # map out what is going on within the code
         to_delete = await self.get_messages_for_deletion(
             channel=channel,
             number=number,
